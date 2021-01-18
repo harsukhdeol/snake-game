@@ -8,6 +8,12 @@ public:
 	Vec2& operator+= (const Vec2& rhs) ; //should return lhs - modifing it so cant be constant
 	Vec2 operator*(float rhs) const; // vector on lhs, float on rhs
 	Vec2& operator *= (float rhs);
+	Vec2 operator-(const Vec2& rhs) const;
+	Vec2& operator-= (const Vec2& rhs);
+	float GetLength() const;
+	float GetLengthSqr() const;
+	Vec2& Normalize();
+	Vec2 GetNormalized ()const;
 
 public:
 	float x;
