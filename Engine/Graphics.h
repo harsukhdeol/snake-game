@@ -62,6 +62,7 @@ public:
 		DrawRect( x0,y0,x0 + width,y0 + height,c );
 	}
 	void DrawOutline(int x0, int y0, int width, int height, int thickness, Color c);
+	void DrawCircle(int x, int y, int radius, Color c);
 
 	~Graphics();
 private:

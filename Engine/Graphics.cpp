@@ -258,6 +258,17 @@ void Graphics::DrawOutline(int x0, int y0, int width, int height, int thickness,
 
 }
 
+void Graphics::DrawCircle(int x, int y, int radius, Color c)
+{
+	for (int i = x - radius; i <= x + radius; i++) {
+		for (int j = y - radius; j <= y + radius; j++) {
+			if (int(sqrt(pow(float(x - i), 2) + pow(float(y - j), 2)))<=radius) {
+				PutPixel(i, j, c);
+			}
+		}
+	}
+}
+
 Graphics::~Graphics()
 {
 	// free sysbuffer memory (aligned free)

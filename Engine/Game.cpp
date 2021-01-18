@@ -21,6 +21,8 @@
 #include "MainWindow.h"
 #include "Game.h"
 #include "SpriteCodex.h"
+#include <chrono>
+#include "FrameTimer.h"
 
 Game::Game(MainWindow& wnd)
 	:
@@ -43,6 +45,7 @@ void Game::Go()
 
 void Game::UpdateModel()
 {
+	const float dt = ft.Mark();
 	if (!isDed) {
 
 		if (wnd.kbd.KeyIsPressed(VK_UP))
@@ -63,9 +66,9 @@ void Game::UpdateModel()
 		}
 	}
 	
-	++snakeMoveCounter;
+	snakeMoveCounter+=dt;
 	if (snakeMoveCounter >= snakePeriod) {
-		snakeMoveCounter = 0;
+		snakeMoveCounter = 0.0f;
 		const Location next = snake.GetNextHeadLoc(delta_loc);
 		if (!brd.IsInsideBoard(next) || snake.isInTileExceptEnd(next))
 		{
@@ -79,16 +82,15 @@ void Game::UpdateModel()
 			snake.MoveBy(delta_loc);
 			if (eating) {
 				goal.Respawn(rng, brd, snake);
-				snakePeriod-=3;
+				
 			}
 		}
-		
+		snakePeriod = std::max(snakePeriod - dt * speedFac, minPeriod);
 	}
 }
 
 void Game::ComposeFrame()
 {
-	
 	
 	if (wnd.kbd.KeyIsPressed(VK_RETURN)) {
 		playing = true;
@@ -104,4 +106,7 @@ void Game::ComposeFrame()
 	else {
 		SpriteCodex::DrawTitle(300, 200, gfx);
 	}
+	
+
+	//gfx.DrawCircle(300, 200, 50, Colors::Red);
 }
