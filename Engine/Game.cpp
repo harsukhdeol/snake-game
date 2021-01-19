@@ -70,7 +70,7 @@ void Game::UpdateModel()
 	if (snakeMoveCounter >= snakePeriod) {
 		snakeMoveCounter = 0.0f;
 		const Location next = snake.GetNextHeadLoc(delta_loc);
-		if (!brd.IsInsideBoard(next) || snake.isInTileExceptEnd(next))
+		if (!brd.IsInsideBoard(next) || snake.isInTileExceptEnd(next) || brd.CheckForObstacle(next) )
 		{
 			isDed = true;
 		}
@@ -82,7 +82,7 @@ void Game::UpdateModel()
 			snake.MoveBy(delta_loc);
 			if (eating) {
 				goal.Respawn(rng, brd, snake);
-				
+				brd.SpawnObstacle(rng, snake, goal);
 			}
 		}
 		snakePeriod = std::max(snakePeriod - dt * speedFac, minPeriod);
@@ -97,8 +97,10 @@ void Game::ComposeFrame()
 	}
 	if (playing) {
 		brd.DrawBorder();
+		brd.DrawObstacles();
 	snake.Draw(brd);
 	goal.Draw(brd);
+
 	if (isDed) {
 		SpriteCodex::DrawGameOver(300, 250, gfx);
 	}

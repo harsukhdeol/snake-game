@@ -7,10 +7,10 @@ Snake::Snake(const Location& loc)
 	constexpr int nBodyColors = 4;
 	static constexpr Color bodyColors[nBodyColors]=
 	{
-		{10,100,255},
-		{10,130,255}, 
-		{18,160,255}, 
-		{10,100,255}
+		{10,100,0},
+		{10,130,0}, 
+		{18,160,0}, 
+		{10,100,0}
 	};
 
 	for (int i = 0; i < nSegMax; ++i) {
