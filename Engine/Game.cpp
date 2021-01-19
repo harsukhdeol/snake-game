@@ -35,11 +35,11 @@ Game::Game(MainWindow& wnd)
 	//spawn all this stuff first
 	for (int i = 0; i < nPoison; i++)
 	{
-		brd.SpawnContents(rng, snake, 3);
+		brd.SpawnContents(rng, snake, Board::CellContents::Poison);
 	}
 	for (int i = 0; i < nFood; i++)
 	{
-		brd.SpawnContents(rng, snake, 2);
+		brd.SpawnContents(rng, snake, Board::CellContents::Food);
 	}
 }
 
@@ -85,24 +85,24 @@ void Game::UpdateModel()
 	if (snakeMoveCounter >= newSnakeMovePeriod) {
 		snakeMoveCounter -=newSnakeMovePeriod;
 		const Location next = snake.GetNextHeadLoc(delta_loc);
-		const int contents = brd.GetContents(next);
+		const Board::CellContents contents = brd.GetContents(next);
 
-		if (!brd.IsInsideBoard(next) || snake.isInTileExceptEnd(next) || contents ==1)
+		if (!brd.IsInsideBoard(next) || snake.isInTileExceptEnd(next) || contents == Board::CellContents::Obstacle)
 		{
 			isDed = true;
 		}
-		else if (contents ==2){
+		else if (contents == Board::CellContents::Food){
 			snake.Grow();
 			snake.MoveBy(delta_loc);
 			brd.ConsumeContents(next);
-				brd.SpawnContents(rng, snake,1);
-				brd.SpawnContents(rng, snake, 2);
+				brd.SpawnContents(rng, snake, Board::CellContents::Obstacle);
+				brd.SpawnContents(rng, snake, Board::CellContents::Food);
 		}
-		else if (contents == 3)
+		else if (contents == Board::CellContents::Poison)
 		{
 			snake.MoveBy(delta_loc);
 			brd.ConsumeContents(next);
-			brd.SpawnContents(rng, snake, 3);
+			brd.SpawnContents(rng, snake, Board::CellContents::Poison);
 			snakePeriod = std::max(snakePeriod *speedFac, minPeriod);
 		}
 		else {
