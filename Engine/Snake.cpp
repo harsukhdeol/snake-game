@@ -25,7 +25,7 @@ void Snake::MoveBy(const Location& delta_loc)
 	for (int i = nSeg - 1; i > 0; --i) {
 		segments[i].Follow(segments[i - 1]);
 	}
-	segments[0].MoveBy(delta_loc);
+	segments[0].MoveBy(delta_loc, speed);
 }
 
 void Snake::Grow()
@@ -68,6 +68,11 @@ bool Snake::isInTile(const Location& target) const
 	return false;
 }
 
+void Snake::SetSpeed(float newSpeed)
+{
+	speed = newSpeed;
+}
+
 
 void Snake::Segment::InitHead(const Location& in_loc)
 {
@@ -80,7 +85,7 @@ void Snake::Segment::InitBody(Color c_in)
 	c = c_in;
 }
 
-void Snake::Segment::MoveBy(const Location& delta_loc)
+void Snake::Segment::MoveBy(const Location& delta_loc, float speed)
 {
 	assert(abs(delta_loc.x) + abs(delta_loc.y) == 1);
 	loc.Add(delta_loc);

@@ -26,7 +26,6 @@
 #include "Board.h"
 #include <random>
 #include "Snake.h"
-#include "Goal.h"
 #include "FrameTimer.h"
 
 class Game
@@ -52,9 +51,11 @@ private:
 	bool isDed = false;
 	bool playing = false;
 	float snakePeriod = 0.4f;
+	static constexpr float snakeSpeedUp = 0.15f;
 	float snakeMoveCounter = 0.0f;
-	static constexpr float minPeriod = 0.07f;
-	static constexpr float speedFac = 0.05f;
+	static constexpr float minPeriod = 0.04f;
+	static constexpr float speedFac = 0.9f;
+	static constexpr int nPoison = 240;
+	static constexpr int nFood = 12;
 	std::mt19937 rng;
-	Goal goal;
 };

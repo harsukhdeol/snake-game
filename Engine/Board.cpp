@@ -1,7 +1,6 @@
 #include "Board.h"
 #include <assert.h>
 #include "Snake.h"
-#include "Goal.h"
 
 Board::Board(Graphics& gfx)
 	: gfx(gfx)
@@ -48,26 +47,41 @@ void Board::DrawBorder()
 	gfx.DrawRect(left, bottom -borderWidth, right, bottom, color);
 }
 
-void Board::DrawObstacles()
+void Board::DrawContents()
 {
 	for (int y = 0; y < height; y++)
 	{
 		for (int x = 0; x < width; x++)
 		{
-			if (CheckForObstacle({ x,y }))
+			const int contents = GetContents({ x,y });
+			if (contents ==1)
 			{
 				DrawCell({ x,y }, obstColor);
+			}
+			else if (contents == 2)
+			{
+				DrawCell({ x,y }, foodColor);
+			}
+			else if (contents == 3)
+			{
+				DrawCell({ x,y }, poisonColor);
 			}
 		}
 	}
 }
 
-bool Board::CheckForObstacle(const Location& loc) const
+int Board::GetContents(const Location& loc) const
 {
-	return hasObstacle[loc.y*width+loc.x];
+	return contents[loc.y*width+loc.x];
 }
 
-void Board::SpawnObstacle(std::mt19937& rng, const Snake& snake, const Goal& goal)
+void Board::ConsumeContents(const Location& loc) 
+{
+	assert(GetContents(loc) == 2 || GetContents(loc) == 3);
+	contents[loc.y * width + loc.x] = 0;
+}
+
+void Board::SpawnContents(std::mt19937& rng, const Snake& snake, int type)
 {
 	std::uniform_int_distribution <int> xDist(0, GetGridWidth() - 1);
 	std::uniform_int_distribution <int> yDist(0, GetGridHeight() - 1);
@@ -76,7 +90,10 @@ void Board::SpawnObstacle(std::mt19937& rng, const Snake& snake, const Goal& goa
 
 	do {
 		newLoc = { xDist(rng), yDist(rng) };
-	} while (snake.isInTile(newLoc) ||CheckForObstacle(newLoc) ||goal.GetLocation()== newLoc); // while any of these are true, keep looping
+	} while (snake.isInTile(newLoc) ||GetContents(newLoc) !=0); // while any of these are true, keep looping
 	
-	hasObstacle[newLoc.y * width + newLoc.x] = true;
+	contents[newLoc.y * width + newLoc.x] = type;
 }
+
+
+

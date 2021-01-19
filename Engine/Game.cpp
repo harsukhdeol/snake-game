@@ -30,9 +30,17 @@ Game::Game(MainWindow& wnd)
 	gfx(wnd),
 	brd(gfx),
 	rng(std::random_device()()),
-	snake({ 2,2 }),
-	goal(rng,brd,snake)
+	snake({ 2,2 })
 {
+	//spawn all this stuff first
+	for (int i = 0; i < nPoison; i++)
+	{
+		brd.SpawnContents(rng, snake, 3);
+	}
+	for (int i = 0; i < nFood; i++)
+	{
+		brd.SpawnContents(rng, snake, 2);
+	}
 }
 
 void Game::Go()
@@ -64,26 +72,41 @@ void Game::UpdateModel()
 		{
 			delta_loc = { 1,0 };
 		}
+		
 	}
-	
+	float newSnakeMovePeriod = snakePeriod;
+
+	if (wnd.kbd.KeyIsPressed(VK_CONTROL))
+	{
+		newSnakeMovePeriod = std::min(snakePeriod, snakeSpeedUp);
+	}
+
 	snakeMoveCounter+=dt;
-	if (snakeMoveCounter >= snakePeriod) {
-		snakeMoveCounter = 0.0f;
+	if (snakeMoveCounter >= newSnakeMovePeriod) {
+		snakeMoveCounter -=newSnakeMovePeriod;
 		const Location next = snake.GetNextHeadLoc(delta_loc);
-		if (!brd.IsInsideBoard(next) || snake.isInTileExceptEnd(next) || brd.CheckForObstacle(next) )
+		const int contents = brd.GetContents(next);
+
+		if (!brd.IsInsideBoard(next) || snake.isInTileExceptEnd(next) || contents ==1)
 		{
 			isDed = true;
 		}
-		else {
-			bool eating = next == goal.GetLocation();
-			if (eating) {
-				snake.Grow();
-			}
+		else if (contents ==2){
+			snake.Grow();
 			snake.MoveBy(delta_loc);
-			if (eating) {
-				goal.Respawn(rng, brd, snake);
-				brd.SpawnObstacle(rng, snake, goal);
-			}
+			brd.ConsumeContents(next);
+				brd.SpawnContents(rng, snake,1);
+				brd.SpawnContents(rng, snake, 2);
+		}
+		else if (contents == 3)
+		{
+			snake.MoveBy(delta_loc);
+			brd.ConsumeContents(next);
+			brd.SpawnContents(rng, snake, 3);
+			snakePeriod = std::max(snakePeriod *speedFac, minPeriod);
+		}
+		else {
+			snake.MoveBy(delta_loc);
 		}
 		snakePeriod = std::max(snakePeriod - dt * speedFac, minPeriod);
 	}
@@ -97,9 +120,8 @@ void Game::ComposeFrame()
 	}
 	if (playing) {
 		brd.DrawBorder();
-		brd.DrawObstacles();
-	snake.Draw(brd);
-	goal.Draw(brd);
+		brd.DrawContents();
+		snake.Draw(brd);
 
 	if (isDed) {
 		SpriteCodex::DrawGameOver(300, 250, gfx);

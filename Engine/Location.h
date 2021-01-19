@@ -13,4 +13,8 @@ public:
 	{
 		return x == rhs.x && y == rhs.y;
 	}
+	/*Location operator *(const float n) const
+	{
+		return Location{ x * n, y * n };
+	}*/
 };

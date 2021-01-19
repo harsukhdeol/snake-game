@@ -14,9 +14,10 @@ public:
 	int GetGridHeight() const;
 	bool IsInsideBoard(const Location& loc) const;
 	void DrawBorder();
-	void DrawObstacles();
-	bool CheckForObstacle(const Location& loc)const;
-	void SpawnObstacle(std::mt19937& rng, const class Snake& snake, const class Goal& goal);
+	void DrawContents();
+	int GetContents(const Location& loc)const;
+	void ConsumeContents(const Location& loc);
+	void SpawnContents(std::mt19937& rng, const class Snake& snake, int type);
 
 private:
 	static constexpr int x = 50;
@@ -27,10 +28,12 @@ private:
 	int spacing = 2;
 	static constexpr Color color= Colors::Blue;
 	static constexpr Color obstColor = Colors::Gray;
+	static constexpr Color foodColor = Colors::Red;
+	static constexpr Color poisonColor = { 150,10,150 };
 	static constexpr int dimension = 20;
 	static constexpr int width = 30;
 	static constexpr int height = 25;
-
-	bool hasObstacle[width * height] = { false };
+	//0 = empty, 1= obstacle, 2= poison
+	int contents[width * height] = { 0 };
 	Graphics& gfx;
 };
