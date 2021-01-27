@@ -4,54 +4,41 @@
 
 Snake::Snake(const Location& loc)
 {
-	constexpr int nBodyColors = 4;
-	static constexpr Color bodyColors[nBodyColors]=
-	{
-		{10,100,0},
-		{10,130,0}, 
-		{18,160,0}, 
-		{10,100,0}
-	};
-
-	for (int i = 0; i < nSegMax; ++i) {
-		segments[i].InitBody(bodyColors[i % nBodyColors]);
-
-	}
-	segments[0].InitHead(loc);
+	
+	segments.emplace_back(loc);// can just pass the param and the segment will contruct itself
 }
 
 void Snake::MoveBy(const Location& delta_loc)
 {
-	for (int i = nSeg - 1; i > 0; --i) {
-		segments[i].Follow(segments[i - 1]);
+
+	for (int i = segments.size() - 1; i > 0; --i) {
+		segments.at(i).Follow(segments[i - 1]);
 	}
-	segments[0].MoveBy(delta_loc, speed);
+	segments.front().MoveBy(delta_loc, speed);
 }
 
 void Snake::Grow()
 {
-	if (nSeg < nSegMax) {
-		nSeg++;
-	}
+	segments.emplace_back(bodyColors[segments.size() % nBodyColors]);
 }
 
 void Snake::Draw(Board& brd) const
 {
-	for (int i = 0; i < nSeg; i++) {
-		segments[i].Draw(brd);
+	for (const auto& s: segments) {
+		s.Draw(brd);
 	}
 }
 
 Location Snake::GetNextHeadLoc(const Location& delta_loc) const
 {
-	Location l(segments[0].GetLocation());
+	Location l(segments.front().GetLocation());
 	l.Add(delta_loc);
 	return l;
 }
 
 bool Snake::isInTileExceptEnd(const Location& target) const
 {
-	for (int i = 0; i < nSeg-1; i++) {
+	for (size_t i = 0; i<segments.size()-1; i++) {
 		if (segments[i].GetLocation() == target) {
 			return true;
 		}
@@ -60,8 +47,8 @@ bool Snake::isInTileExceptEnd(const Location& target) const
 }
 bool Snake::isInTile(const Location& target) const
 {
-	for (int i = 0; i < nSeg; i++) {
-		if (segments[i].GetLocation() == target) {
+	for (const auto& s : segments) {
+		if (s.GetLocation() == target) {
 			return true;
 		}
 	}
@@ -74,13 +61,13 @@ void Snake::SetSpeed(float newSpeed)
 }
 
 
-void Snake::Segment::InitHead(const Location& in_loc)
+ Snake::Segment::Segment(const Location& in_loc)
 {
 	loc = in_loc;
 	c = Snake::headColor;
 }
 
-void Snake::Segment::InitBody(Color c_in)
+ Snake::Segment::Segment(Color c_in)
 {
 	c = c_in;
 }

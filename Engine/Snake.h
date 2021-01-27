@@ -1,15 +1,15 @@
 #pragma once
 #include "Board.h"
+#include <vector>
 
 class Snake
 {
-public:
 private:
 	class Segment
 	{
 	public:
-		void InitHead(const Location& in_loc);
-		void InitBody(Color c_in);
+		Segment (const Location& in_loc);
+		Segment (Color c_in);
 		void MoveBy(const Location& delta_loc, float speed);
 		void Follow(const Segment& next);
 		void Draw(Board& brd) const;
@@ -30,7 +30,13 @@ public:
 private:
 	float speed = 0.025f;
 	static constexpr Color headColor = Colors::Yellow;
-	static constexpr int nSegMax = 100;
-	Segment segments[nSegMax];
-	int nSeg = 1;
+	std::vector<Segment> segments;
+	static constexpr int nBodyColors = 4;
+	static constexpr Color bodyColors[nBodyColors] =
+	{
+		{10,100,0},
+		{10,130,0},
+		{18,160,0},
+		{10,100,0}
+	};
 };
