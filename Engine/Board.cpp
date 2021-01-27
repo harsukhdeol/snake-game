@@ -7,7 +7,7 @@ Board::Board(Graphics& gfx, const GameSettings& settings)
 	dimension(settings.GetTileSize()),
 	width(settings.GetBoardWidth()),
 	height(settings.GetBoardHeight()),
-	contents(new CellContents[width*height])
+	contents(width*height, CellContents::Empty)
 
 {
 	

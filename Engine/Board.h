@@ -4,6 +4,7 @@
 #include "Location.h"
 #include "GameSettings.h"
 #include <random>
+#include <vector>
 
 class Board
 {
@@ -13,12 +14,6 @@ public:
 	enum class CellContents{Empty,Obstacle,Food,Poison};
 
 	Board(Graphics& gfx, const GameSettings& settings);
-	~Board() {
-		delete[] contents;
-		contents = nullptr;
-	}
-	Board(const Board&) = delete;
-	Board& operator= (const Board&) = delete;
 	void DrawCell(const Location& loc, Color c);
 	int GetGridWidth() const;
 	int GetGridHeight() const;
@@ -43,6 +38,6 @@ private:
 	 int dimension;
 	 int width;
 	 int height;
-	CellContents *contents= nullptr;
+	std::vector<CellContents> contents;
 	Graphics& gfx;
 };

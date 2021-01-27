@@ -27,6 +27,9 @@ public:
 	bool isInTileExceptEnd(const Location& target) const;
 	bool isInTile(const Location& target) const;
 	void SetSpeed(float newSpeed);
+	int GetLength()const {
+		return segments.size();
+	}
 private:
 	float speed = 0.025f;
 	static constexpr Color headColor = Colors::Yellow;

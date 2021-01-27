@@ -13,6 +13,15 @@ public:
 	{
 		return x == rhs.x && y == rhs.y;
 	}
+	bool operator!=(const Location& rhs)const
+	{
+		return !(*this == rhs);
+	}
+	Location operator-()const
+	{
+		return { -x,-y };
+	}
+
 	/*Location operator *(const float n) const
 	{
 		return Location{ x * n, y * n };
