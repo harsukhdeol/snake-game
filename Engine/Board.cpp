@@ -2,10 +2,22 @@
 #include <assert.h>
 #include "Snake.h"
 
-Board::Board(Graphics& gfx)
-	: gfx(gfx)
-{}
+Board::Board(Graphics& gfx, const GameSettings& settings)
+	: gfx(gfx),
+	dimension(settings.GetTileSize()),
+	width(settings.GetBoardWidth()),
+	height(settings.GetBoardHeight()),
+	contents(new CellContents[width*height])
 
+{
+	
+	for (int i = 0; i < width * height; i++)
+
+	{
+		contents[i] = CellContents::Empty;
+
+	}
+}
 void Board::DrawCell(const Location & loc, Color c)
 {
 	assert(loc.x >= 0);

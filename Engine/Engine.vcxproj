@@ -143,6 +143,7 @@
     <ClInclude Include="DXErr.h" />
     <ClInclude Include="FrameTimer.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameSettings.h" />
     <ClInclude Include="Goal.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Keyboard.h" />

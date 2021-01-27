@@ -42,9 +42,11 @@ private:
 	/*  User Functions              */
 	/********************************/
 private:
+
 	MainWindow& wnd;
 	Graphics gfx;
 	FrameTimer ft;
+	GameSettings settings = "gameConfig.txt";
 	Board brd;
 	Snake snake;
 	Location delta_loc = { 0,1 };
@@ -54,8 +56,8 @@ private:
 	static constexpr float snakeSpeedUp = 0.15f;
 	float snakeMoveCounter = 0.0f;
 	static constexpr float minPeriod = 0.04f;
-	static constexpr float speedFac = 0.9f;
-	static constexpr int nPoison = 240;
-	static constexpr int nFood = 12;
+	 float speedFac;
+	 int nPoison;
+	 int nFood;
 	std::mt19937 rng;
 };

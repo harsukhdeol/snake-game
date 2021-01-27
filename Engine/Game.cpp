@@ -23,15 +23,23 @@
 #include "SpriteCodex.h"
 #include <chrono>
 #include "FrameTimer.h"
-
+#include <fstream>
+#include <iostream>
+#include <string>
+ 
+//using namespace std;
 Game::Game(MainWindow& wnd)
 	:
 	wnd(wnd),
 	gfx(wnd),
-	brd(gfx),
+	brd(gfx, settings),
 	rng(std::random_device()()),
-	snake({ 2,2 })
+	snake({ 2,2 }),
+	nPoison(settings.GetPoison()),
+	nFood(settings.GetFood()),
+	speedFac(settings.GetSpeedRate())
 {
+		
 	//spawn all this stuff first
 	for (int i = 0; i < nPoison; i++)
 	{
